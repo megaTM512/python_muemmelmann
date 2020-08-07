@@ -159,33 +159,35 @@ def build_plot(pfinal_route,pfinalRouteByName):
     #y = y + 0.5
     plt.axis([1,27,1,27]) #Die "Karte" soll immer 26*26 PLanquadrate groß sein.
 
-    #plt.style.use("seaborn")            
-    plt.gca() .set_xticks(np.arange(1, 27, 1)) #Jedes Planquadrat soll auch ein Quadrat sein!
-    plt.gca() .set_yticks(np.arange(1, 27, 1))
-    plt.grid()
+
+    
 
     plt.gca().invert_yaxis()    #In Sea of Thieves sind die großen Zahlen unten :P
     plt.gca().set_aspect("equal")
     
-    plt.plot(x, y, color="blue", zorder=1)  #Die Seewege zwischen den Punkten
-    plt.scatter(x, y, color="black", zorder=2)  #Die Inseln als größere Punkte
+    plt.plot(x, y, color="blue", zorder=2)  #Die Seewege zwischen den Punkten
+    plt.scatter(x, y, color="black", zorder=3)  #Die Inseln als größere Punkte
+
     for i,txt in enumerate(pfinalRouteByName):
        plt.annotate(txt + "(" + destinations[txt] + ")",(x[i],y[i]))   #Text an den Punkten, die zeigen sollen welche Insel das ist
 
     plt.xticks(np.arange(1, 27), "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
     
 
-    plt.plot(x[0],y[0],"o",color="red",zorder=3)    #Der Anfang soll hervorgehoben werden.
+    plt.plot(x[0],y[0],"o",color="red",zorder=4)    #Der Anfang soll hervorgehoben werden.
+    
+    
+    #plt.style.use("seaborn")            
+    plt.gca().set_xticks(np.arange(1, 27, 1)) #Jedes Planquadrat soll auch ein Quadrat sein!
+    plt.gca().set_yticks(np.arange(1, 27, 1))
+    plt.grid(zorder=1)
     plt.show()
 
 
-def seaOfThievesNav(inputString):
-    cleanInput = convertStringOfDestinationsToCleanedList(inputString)	#Der Input wird zunächst mit Fuzzy Wuzzy zu validen Destinations umgewandelt.
-    coordinateInput = destinationsToCoordinates(cleanInput)	#Alle Planquadrate werden nun zu Kartesischen Koordinaten umgewandelt
-    final_route, finalRouteByName = TSP_nearestNeighbor(coordinateInput,cleanInput)	#Die Route wird einmal in Koordinaten und in Namen ausgegeben (wichtig für das Plotten)
+def seaOfThievesNav(inputText):
+    inputString = inputText
+    cleanInput = convertStringOfDestinationsToCleanedList(inputString)
+    coordinateInput = destinationsToCoordinates(cleanInput)
+    final_route, finalRouteByName = TSP_nearestNeighbor(coordinateInput,cleanInput)
     print("Shortest Route: " + str(finalRouteByName))
     build_plot(final_route,finalRouteByName)
-
-if(__name__ = "__main__"):
-    programInput = input("Which Islands to you want to visit? :")
-    seaOfThievesNav(programInput)
